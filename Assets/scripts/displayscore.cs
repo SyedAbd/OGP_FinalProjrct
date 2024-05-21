@@ -1,39 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
+using Unity.Netcode;
+using TMPro;
 
-public class displayscore : MonoBehaviour
+public class GameOutcomeManager : NetworkBehaviour
 {
+    public TextMeshProUGUI outcomeText;
     [SerializeField] private TrackScore checkScore;
-    public TextMeshProUGUI gameOverTxt;
-    
-    private float score;
-    // Start is called before the first frame update
-    void Start()
-    {
-        score = checkScore.Score;
-        if(score > 100 )
-        gameOverTxt.text = $"you Scored: {score} Are you a hacker?";
-        else if (score > 70)
-            gameOverTxt.text = $"you Scored: {score} how did you do it?";
-        else if (score > 50)
-            gameOverTxt.text = $"you Scored: {score} this is good";
-        else if (score > 30)
-            gameOverTxt.text = $"you Scored: {score} you are catching up";
-        else if (score > 20)
-            gameOverTxt.text = $"you Scored: {score} a child could score better than you";
-        else if (score > 15)
-            gameOverTxt.text = $"you Scored: {score} are you sure you are playing?";
-        else if (score > 7)
-            gameOverTxt.text = $"you Scored: {score} couldn't be worse";
-        else gameOverTxt.text = $"you Scored: {score} playing games is not for kids";
-    }
+    [SerializeField] private Scorechecker heyyyyy;
 
-    // Update is called once per frame
-    void Update()
+    //private NetworkVariable<bool> hasWon = new NetworkVariable<bool>(false);
+    //private NetworkVariable<int> serverScore = new NetworkVariable<int>(0);
+    //private NetworkVariable<int> clientScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    //void OnEnable()
+    //{
+
+
+    //    GetComponent<NetworkObject>().SpawnWithOwnership(1);
+
+
+    //}
+    private void Start()
     {
-        
+        if (!IsServer)
+        {
+            heyyyyy.RecieveScoreServerRpc(checkScore.Score);
+        }
     }
+    //void Update()
+    //{
+    //    if (IsServer)
+    //    {
+    //        // Update server's score
+    //        serverScore.Value = GetServerScore();
+
+    //        // Determine game outcome
+    //        bool serverWon = serverScore.Value > clientScore.Value;
+
+    //        // Update game outcome NetworkVariable
+    //        hasWon.Value = serverWon;
+
+    //        // Debug logs for server score
+    //        Debug.Log("Server Score: " + serverScore.Value);
+    //        Debug.Log("Client Score: " + clientScore.Value);
+    //    }
+    //    else
+    //    {
+    //        // Update client's score
+    //        clientScore.Value = GetClientScore();
+
+    //        // Debug logs for client score
+    //        Debug.Log("Client Score: " + clientScore.Value);
+    //        Debug.Log("Server Score: " + serverScore.Value);
+    //    }
+
+    //    // Check game outcome and display appropriate message on client's screen
+    //    if (!IsServer)
+    //    {
+    //        // Show win or loss message based on game outcome
+    //        if (hasWon.Value)
+    //        {
+    //            outcomeText.text = "Congratulations! You Won!";
+    //        }
+    //        else
+    //        {
+    //            outcomeText.text = "You Lost! Better luck next time!";
+    //        }
+    //    }
+    //}
+
+    //// Method to get server's score
+    //private int GetServerScore()
+    //{
+    //    return serverScore.Value;
+    //}
+
+    //// Method to get client's score
+    //private int GetClientScore()
+    //{
+    //    return clientScore.Value;
+    //}
 }

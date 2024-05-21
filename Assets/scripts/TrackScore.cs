@@ -1,35 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TrackScore : MonoBehaviour
 {
-    [SerializeField] public float score = 0f;
-    [SerializeField] private TMPro.TMP_Text scoreTxtUI;
+    [SerializeField] private float score = 0;
+    [SerializeField] private TextMeshProUGUI scoreTxtUI;
+
     public float Score
     {
         get { return score; }
-        set { score = value; }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        scoreTxtUI.text = string.Format($"Score:{0}", score);
-    }
-
-
-    public void IncresePoint(float addIntoTheScore)
-    {
-
-        score += addIntoTheScore;
-        
-
+        set
+        {
+            score = value;
+            UpdateScoreText();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-         scoreTxtUI.text = $"Score: {score}";
+        UpdateScoreText();
+    }
 
+    private void UpdateScoreText()
+    {
+        scoreTxtUI.text = $"Score: {score}";
+    }
+
+    public void IncreasePoint(float pointsToAdd)
+    {
+        Score += pointsToAdd;
     }
 }

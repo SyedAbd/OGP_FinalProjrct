@@ -15,7 +15,7 @@ public class WeaponSelection : MonoBehaviour
     Vector3 OnScreen = Vector3.zero;
     void Start()
     {
-        guns[0].SetActive(true);
+       // guns[0].SetActive(true);
     }
     public void NextGun()
     {

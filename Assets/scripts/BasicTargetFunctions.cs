@@ -17,7 +17,7 @@ public class BasicTargetFunctions : MonoBehaviour
     protected void UpdateScore(float addToTheScore)
     {
 
-        returnScoreForUpdate.IncresePoint(addToTheScore);
+        returnScoreForUpdate.IncreasePoint(addToTheScore);
         
 
     }
