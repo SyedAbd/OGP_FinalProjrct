@@ -10,20 +10,27 @@ public class targetSync : NetworkBehaviour
 
 
 
-
+    public void Start()
+    {
+        //if(!IsServer)
+            //gameObject.SetActive(false);
+    }
 
     public void DeactivateObject()
     {
-        if (IsServer)
+        if (IsOwner)
         {
+
             // Deactivate on the server
             //gameObject.SetActive(false);
 
             // Notify all clients to deactivate the object
-            DeactivateObjectClientRpc();
+            Debug.Log("Object deactivated (in Owner)");
+            DeactivateObjectServerRpc();
         }
         else
         {
+            Debug.Log("Object deactivated (in else)");
             // If a client wants to deactivate, send a request to the server
             DeactivateObjectServerRpc();
         }
@@ -35,7 +42,8 @@ public class targetSync : NetworkBehaviour
     {
         //if (IsServer)
         //{
-            gameObject.SetActive(false);
+        Debug.Log("Object deactivated (in ServerRPC)");
+        gameObject.SetActive(false);
             DeactivateObjectClientRpc();
             //DeactivateObject();
         //}
@@ -47,7 +55,8 @@ public class targetSync : NetworkBehaviour
     {
         //if (IsClient)
         //{
-            gameObject.SetActive(false);
+        Debug.Log("Object deactivated (in ClientRPC)");
+        gameObject.SetActive(false);
         //}
         //}
     }
@@ -103,6 +112,7 @@ public class targetSync : NetworkBehaviour
                 // Check if the target is inactive and sync visibility state
                 if (!gameObject.activeInHierarchy)
                 {
+                    Debug.Log("Object deactivated (in update)");
                     DeactivateObject();
                 }
             //    else if (!isVisible)

@@ -19,7 +19,7 @@ public class Targetmanager : MonoBehaviour
             foreach (GameObject targetObject in targetObjects)
             {
                 
-                if (!targetObject.activeSelf)
+                if (!targetObject.activeInHierarchy)
                 {
                     yield return new WaitForSeconds(1f);
                     targetObject.SetActive(true);

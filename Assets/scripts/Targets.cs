@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Targets : BasicTargetFunctions
 {
     private const string BulletTag = "Bullet";
     // Start is called before the first frame update
+    private NetworkVariable<int> points = new NetworkVariable<int>();
+    public int Points { get => points.Value; set => points.Value = value; }
     void Start()
     {
         
@@ -58,24 +61,80 @@ public class Targets : BasicTargetFunctions
 
 
     //}
+
+
+    public void DeactivateObject(char c)
+    {
+        if (IsOwner)
+        {
+
+            
+ 
+            Debug.Log("Object deactivated (in Owner)");
+            DeactivateObjectServerRpc(c);
+        }
+        else
+        {
+            Debug.Log("Object deactivated (in else)");
+           
+            DeactivateObjectServerRpc(c);
+        }
+    }
+
+    
+    [ServerRpc(RequireOwnership = false)]
+    private void DeactivateObjectServerRpc(char c)
+    {
+        
+        Debug.Log("Object deactivated (in ServerRPC)");
+        if (c == 'c')
+        {
+            transform.gameObject.SetActive(false);
+        }
+        else
+        {
+            transform.parent.gameObject.SetActive(false);
+        }
+        DeactivateObjectClientRpc(c);
+        
+    }
+
+    // RPC to be called on all clients to deactivate the object
+    [ClientRpc]
+    private void DeactivateObjectClientRpc(char c)
+    {
+        
+        Debug.Log("Object deactivated (in ClientRPC)");
+        if (c == 'c')
+        {
+            transform.gameObject.SetActive(false);
+        }
+        else
+        {
+            transform.parent.gameObject.SetActive(false);
+        }
+
+    }
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"Yeeeeeeeeeeeee grapeeeeeeeeeee");
 
         if (collision.collider.CompareTag(BulletTag))
         {
-            int points = GetPointsForCategory(pointCategory);
-            if (points > 0)
+            Points = GetPointsForCategory(pointCategory);
+            if (Points > 0)
             {
-                UpdateScore(points);
-                Debug.Log($"Score updated by {points} points");
-                if (points == 2)
+                UpdateScore(Points);
+                Debug.Log($"Score updated by {Points} points");
+                if (Points == 2)
                 {
-                    transform.gameObject.SetActive(false);
+                    //transform.gameObject.SetActive(false);
+                    DeactivateObject('c');
                 }
                 else
                 {
-                    transform.parent.gameObject.SetActive(false);
+                    //transform.parent.gameObject.SetActive(false);
+                    DeactivateObject('p');
                 }
                 
             }
